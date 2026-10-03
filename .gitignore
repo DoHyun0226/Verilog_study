@@ -1,0 +1,41 @@
+# ==============================================
+# Vivado .gitignore
+# 추적 대상: .v/.sv(소스·테스트벤치), .xdc(제약), .xpr(프로젝트),
+#            .xci/.bd(IP·Block Design), .wcfg(파형 설정), .mem/.coe 등
+# ==============================================
+
+# ---------- Vivado 자동 생성 폴더 ----------
+*.cache/
+*.runs/
+*.sim/
+*.hw/
+*.gen/
+*.ip_user_files/
+.Xil/
+
+# ---------- 로그 / 저널 / 임시 파일 ----------
+*.jou
+*.log
+*.str
+*.backup.*
+vivado_pid*
+hs_err_pid*
+dfx_runtime.txt
+webtalk*
+usage_statistics_webtalk.*
+*.tmp
+
+# ---------- 대용량 빌드 산출물 ----------
+*.dcp
+*.wdb
+*.bit
+*.bin
+*.ltx
+*.pb
+*.rpt
+
+# ---------- OS / 에디터 ----------
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
