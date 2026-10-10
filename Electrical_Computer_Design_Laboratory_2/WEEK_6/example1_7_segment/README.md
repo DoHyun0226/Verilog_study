@@ -21,6 +21,6 @@
 
 `one_shot_modified`는 이전 클럭의 `btn`만 저장하고, 에지 검출(`btn == 1 && btn_trig == 0`)은 `seg_counter_modified` 안에서 합니다. 레지스터가 하나 줄어 1클럭 빨리 반응합니다.
 
-`seg_counter_modified.v`는 `one_shot_modified`를 포트 5개로 연결하지만, `one_shot_modified`의 포트는 4개입니다. Vivado에서 포트 수 불일치 오류나 경고가 날 수 있습니다.
+`seg_counter_modified.v`와 `one_shot_modified.v`는 Vivado 프로젝트에서 **disable** 상태라 합성·구현에는 쓰이지 않습니다. 참고로 `seg_counter_modified.v`는 `one_shot_modified`를 포트 5개로 연결하지만 `one_shot_modified`의 포트는 4개이므로, 다시 enable할 때는 포트 연결을 맞춰야 합니다.
 
 제약 파일은 아직 없습니다.
