@@ -8,7 +8,7 @@
 | [WEEK_3](WEEK_3) | 비교기, MUX, 디코더, 우선순위 인코더 |
 | [WEEK_4](WEEK_4) | SR 래치, D/JK/T 플립플롭, one-shot trigger, blocking/non-blocking |
 | [WEEK_5](WEEK_5) | 상태 머신(SM1, 자판기 SM2), 카운터, 보드·클럭 테스트 |
-| [WEEK_6](WEEK_6) | 7-segment 표시 |
+| [WEEK_6](WEEK_6) | 7-segment 표시(단일, 어레이), 피에조 부저 |
 
 각 프로젝트 폴더의 README에 파일 구성, 입출력, 보드 핀 연결을 정리했습니다.
 

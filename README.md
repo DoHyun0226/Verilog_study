@@ -16,7 +16,7 @@ Verilog/
 │   ├── WEEK_3/   # 비교기, MUX, 디코더, 우선순위 인코더
 │   ├── WEEK_4/   # SR 래치, D/JK/T 플립플롭, 예비 보고서
 │   ├── WEEK_5/   # 상태 머신, 카운터, 보드·클럭 테스트
-│   └── WEEK_6/   # 7-segment 표시
+│   └── WEEK_6/   # 7-segment 표시, 피에조 부저
 ├── Logic_and_Computer_Design_Fundamentals/  # 교재 "Logic and Computer Design Fundamentals"
 │   ├── ch2/
 │   └── Example/
