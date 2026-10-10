@@ -5,18 +5,17 @@
 module one_shot_universal(clk, rst, btn, btn_trig);
 
 parameter WIDTH = 1; // Default Value of Width = 1
-// Width must be modified by using one_shot_universal #(.Width(number)) instance_name(clk, rst, btn, btn_trig)
-input clk, rst, btn;
-// [BUG] btn is declared as 1-bit, not [WIDTH-1:0]
-//   -> when WIDTH > 1, only btn[0] of the connected bus enters this module
-//      and btn_trig[WIDTH-1:1] never goes high
-//   fix: input clk, rst;
-//        input [WIDTH-1:0] btn;
+// Width must be modified by using one_shot_universal #(.WIDTH(number)) instance_name(clk, rst, btn, btn_trig)
+input clk, rst;
+input [WIDTH-1:0] btn;  // WIDTH-bit button input
 reg [WIDTH-1:0] btn_reg;          // btn value of the previous clock
 output reg [WIDTH-1:0] btn_trig;  // one-shot output
 
 always @(negedge rst or posedge clk) begin
     if(!rst) begin // asynchronous active-low reset
+        // {WIDTH{1'b0}} : replication operator {count{value}} -> 1'b0 repeated WIDTH times = WIDTH-bit zero
+        //   e.g. WIDTH = 10 -> 10'b0000000000, {3{2'b10}} -> 6'b101010
+        //   width follows the WIDTH parameter automatically (count must be a constant)
         btn_reg <= {WIDTH{1'b0}};
         btn_trig <= {WIDTH{1'b0}};
     end
