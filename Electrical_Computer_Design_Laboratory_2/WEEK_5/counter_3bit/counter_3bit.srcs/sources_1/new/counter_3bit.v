@@ -20,14 +20,28 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module counter_3bit(clk, rst, x, state);
+module counter_3bit(clk, rst, x, btn, state);
 
-input clk, rst, x;
+input clk, rst;
+input x;    // 방향: 1이면 up, 0이면 down
+input btn;  // 카운트 버튼
+reg btn_reg, btn_trig;
 output reg [2:0] state;
+
+// one-shot: btn이 0->1로 transition 되었을 때만 btn_trig가 1클럭 동안 1
+always @(negedge rst or posedge clk) begin
+    if(!rst) begin
+        {btn_reg, btn_trig} <= 2'b00;
+    end
+    else begin
+        btn_reg <= btn;
+        btn_trig <= btn & ~btn_reg;
+    end
+end
 
 always @(negedge rst or posedge clk) begin
     if(!rst) state <= 3'b000;
-    else begin
+    else if(btn_trig) begin // else if block is implemented only if btn_trig = 1
         case(state)
             3'b000 : state <= x ? 3'b001 : 3'b111;
             3'b001 : state <= x ? 3'b010 : 3'b000;
