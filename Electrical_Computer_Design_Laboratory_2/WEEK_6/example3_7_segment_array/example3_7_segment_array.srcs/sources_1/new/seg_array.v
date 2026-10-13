@@ -20,12 +20,12 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module seg_array(clk, rst, btn, seg_data, seg_sel);
+module seg_array(clk, rst, btn, seg_data, seg_sel, state_bin);
 
 input clk, rst;
 input btn;
 wire btn_trig;
-reg [3:0] state_bin; // binary state
+output reg [3:0] state_bin; // binary state
 wire [7:0] state_bcd; // bcd state corresponding to binary state
 output reg [7:0] seg_data; // 7 segment date
 output reg [7:0] seg_sel; // 7 segment selection line

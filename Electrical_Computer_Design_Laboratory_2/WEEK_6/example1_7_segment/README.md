@@ -10,6 +10,18 @@
 | `example1_7_segment.srcs/sources_1/new/one_shot.v` | 1비트 one-shot trigger (`one_shot`) |
 | `example1_7_segment.srcs/sources_1/new/seg_counter_modified.v` | 수정 버전 (`seg_counter_modified`) |
 | `example1_7_segment.srcs/sources_1/new/one_shot_modified.v` | 수정 버전 (`one_shot_modified`) |
+| `example1_7_segment.srcs/sim_1/new/t_seg_counter.v` | 테스트벤치 (`t_seg_counter`) |
+| `example1_7_segment.srcs/constrs_1/new/seg_counter.xdc` | 핀 제약 |
+
+## 보드 연결
+
+| 포트 | 의미 | 보드 |
+|---|---|---|
+| `clk` | 클럭 | B6 (메인 클럭) |
+| `rst` | active-low 리셋 | DIP 스위치 1 |
+| `btn` | 카운트 버튼 | 버튼 SM_1 |
+| `state[3:0]` | 현재 숫자 (2진수) | LED1 ~ LED4 (`state[3]`이 LED1) |
+| `seg[7:0]` | `{a, b, c, d, e, f, g, dp}` | 7-segment SEG_A ~ SEG_DP |
 
 ## 동작
 
@@ -23,4 +35,7 @@
 
 `seg_counter_modified.v`와 `one_shot_modified.v`는 Vivado 프로젝트에서 **disable** 상태라 합성·구현에는 쓰이지 않습니다. 참고로 `seg_counter_modified.v`는 `one_shot_modified`를 포트 5개로 연결하지만 `one_shot_modified`의 포트는 4개이므로, 다시 enable할 때는 포트 연결을 맞춰야 합니다.
 
-제약 파일은 아직 없습니다.
+## 시뮬레이션
+
+- 테스트벤치는 10 ns 주기 클럭에서 버튼을 10번 눌러 0 → 9 → 0 순환을 확인하고, 버튼을 40 ns 동안 누르고 있어도 한 번만 증가하는지, 비동기 리셋 뒤 다시 세는지를 확인합니다.
+- 테스트벤치는 `seg_counter`를 포트 4개(`clk, rst, btn, seg`)로만 연결하므로 `state` 출력은 연결되지 않습니다. 파형에서는 `seg_counter_instance` 안의 `state`로 볼 수 있습니다.

@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 
 // seg_counter: each btn press increases the 7-segment digit (0 -> 1 -> ... -> 9 -> 0)
-module seg_counter(clk, rst, btn, seg);
+module seg_counter(clk, rst, btn, seg, state);
 
 input clk, rst;
 input btn;             // count-up button
 wire btn_trig;         // one-shot pulse of btn
-reg [3:0] state;       // current count (0~9)
+output reg [3:0] state;       // current count (0~9)
 output reg [7:0] seg;  // {a, b, c, d, e, f, g, dp}, active-high
 
 one_shot O1(clk, rst, btn, btn_trig); // 1 clock pulse per button press

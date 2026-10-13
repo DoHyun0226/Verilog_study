@@ -18,5 +18,9 @@
 |---|---|
 | B6 | 메인 클럭 |
 | Y1, W3 | DIP 스위치 1, 2 |
-| K4, N8, N4 | 버튼 SM_1, SM_2, SM_3 |
+| K4, N8, N4, N1, P6, N6, L5, J2 | 버튼 SM_1 ~ SM_8 |
 | L4, M4, M2, N7 | LED1 ~ LED4 |
+| P1, P3, P7, N3, T5, R2, R4, R6 | 7-segment SEG_A ~ SEG_G, SEG_DP |
+| F1, F5, E2, E4, J1, J3, J7, H2 | 7-segment 어레이 AR_SEG_A ~ AR_SEG_G, AR_SEG_DP |
+| H4, H6, G1, G3, L6, K1, K3, K5 | 7-segment 어레이 자리 선택 AR_SEG_S0 (왼쪽) ~ AR_SEG_S7 (오른쪽) |
+| Y21 | 피에조 부저 |

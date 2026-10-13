@@ -6,3 +6,4 @@
 | [example2_7_segment](example2_7_segment) | 버튼 10개로 0~9 직접 선택 (우선순위 인코더) |
 | [example3_7_segment_array](example3_7_segment_array) | 8자리 7-segment 어레이에 0~15를 두 자리 10진수로 표시 (bin2bcd, 다이내믹 구동) |
 | [example4_piezo_basic](example4_piezo_basic) | 버튼 8개로 피에조 부저에서 도~높은 도 연주 |
+| [bin2bcd_4bit](bin2bcd_4bit) | 4비트 2진수 → 2자리 BCD 변환 (조합회로 버전) |
