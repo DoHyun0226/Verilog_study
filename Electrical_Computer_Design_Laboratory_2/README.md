@@ -10,6 +10,7 @@
 | [WEEK_5](WEEK_5) | 상태 머신(SM1, 자판기 SM2), 카운터, 보드·클럭 테스트 |
 | [WEEK_6](WEEK_6) | 7-segment 표시(단일, 어레이), 피에조 부저 |
 | [WEEK_7](WEEK_7) | LED PWM 제어(단색 LED 밝기, 3색 LED 색상) |
+| [WEEK_8](WEEK_8) | Text LCD (두 줄 표시, 한 줄 모드, 3칸 shift, 전광판 shift) |
 
 각 프로젝트 폴더의 README에 파일 구성, 입출력, 보드 핀 연결을 정리했습니다.
 
@@ -20,7 +21,7 @@
 | B6 | 메인 클럭 |
 | Y1, W3, U2, T1, W4, W1, V4, U4 | DIP 스위치 SW1 ~ SW8 |
 | K4, N8, N4, N1, P6, N6, L5, J2, K2 | 버튼 SM_1 ~ SM_9 |
-| L4, M4, M2, N7 | LED1 ~ LED4 |
+| L4, M4, M2, N7, M7, M3, M1, N5 | LED1 ~ LED8 |
 | P1, P3, P7, N3, T5, R2, R4, R6 | 7-segment SEG_A ~ SEG_G, SEG_DP |
 | F1, F5, E2, E4, J1, J3, J7, H2 | 7-segment 어레이 AR_SEG_A ~ AR_SEG_G, AR_SEG_DP |
 | H4, H6, G1, G3, L6, K1, K3, K5 | 7-segment 어레이 자리 선택 AR_SEG_S0 (왼쪽) ~ AR_SEG_S7 (오른쪽) |
@@ -28,3 +29,5 @@
 | T2, U1, P2, R3 | 3색 LED 빨강 CLED_R1 ~ CLED_R4 |
 | U5, V1, R7, T6 | 3색 LED 초록 CLED_G1 ~ CLED_G4 |
 | U3, W2, R5, T3 | 3색 LED 파랑 CLED_B1 ~ CLED_B4 |
+| A4, B2, C3, D4, A2, C5, C1, D1 | Text LCD 데이터 LCD_D0 ~ LCD_D7 |
+| G6, D6, A6 | Text LCD 제어 LCD_RS, LCD_RW, LCD_E |

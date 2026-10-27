@@ -17,7 +17,8 @@ Verilog/
 │   ├── WEEK_4/   # SR 래치, D/JK/T 플립플롭, 예비 보고서
 │   ├── WEEK_5/   # 상태 머신, 카운터, 보드·클럭 테스트
 │   ├── WEEK_6/   # 7-segment 표시, 피에조 부저
-│   └── WEEK_7/   # LED PWM 제어 (단색, 3색 LED)
+│   ├── WEEK_7/   # LED PWM 제어 (단색, 3색 LED)
+│   └── WEEK_8/   # Text LCD (두 줄, 한 줄, 3칸 shift, 전광판 shift)
 ├── Logic_and_Computer_Design_Fundamentals/  # 교재 "Logic and Computer Design Fundamentals"
 │   ├── ch2/
 │   └── Example/
