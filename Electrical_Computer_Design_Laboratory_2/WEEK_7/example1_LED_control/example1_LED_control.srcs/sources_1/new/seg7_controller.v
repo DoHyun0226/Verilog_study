@@ -89,7 +89,7 @@ always @(*) begin
         7 : seg_data = 8'b11100000;
         8 : seg_data = 8'b11111110;
         9 : seg_data = 8'b11110110;
-        default : seg_data = 8'b00000000;
+        default : seg_data = 8'b00000000; // default: all off
     endcase
 end
 
