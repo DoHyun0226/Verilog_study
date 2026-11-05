@@ -11,6 +11,7 @@
 | [WEEK_6](WEEK_6) | 7-segment 표시(단일, 어레이), 피에조 부저 |
 | [WEEK_7](WEEK_7) | LED PWM 제어(단색 LED 밝기, 3색 LED 색상) |
 | [WEEK_8](WEEK_8) | Text LCD (두 줄 표시, 한 줄 모드, 3칸 shift, 전광판 shift) |
+| [WEEK_10](WEEK_10) | DAC (AD7302, 버튼으로 입력 ±1, ±2, ±8, 출력 A/B 선택) |
 
 각 프로젝트 폴더의 README에 파일 구성, 입출력, 보드 핀 연결을 정리했습니다.
 
@@ -31,3 +32,5 @@
 | U3, W2, R5, T3 | 3색 LED 파랑 CLED_B1 ~ CLED_B4 |
 | A4, B2, C3, D4, A2, C5, C1, D1 | Text LCD 데이터 LCD_D0 ~ LCD_D7 |
 | G6, D6, A6 | Text LCD 제어 LCD_RS, LCD_RW, LCD_E |
+| B3, B1, C4, C2, D5, D2, E5, E3 | DAC 데이터 DAC_D7 (MSB) ~ DAC_D0 |
+| G2, E1, F4, G4 | DAC 제어 DAC_A_B, DAC_CSN, DAC_LDACN, DAC_WRN |
