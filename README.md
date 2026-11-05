@@ -19,6 +19,7 @@ Verilog/
 │   ├── WEEK_6/   # 7-segment 표시, 피에조 부저
 │   ├── WEEK_7/   # LED PWM 제어 (단색, 3색 LED)
 │   ├── WEEK_8/   # Text LCD (두 줄, 한 줄, 3칸 shift, 전광판 shift)
+│   ├── WEEK_9/   # Text LCD 커서 제어 (숫자 쓰기, 줄 전환, 마지막 칸 처리)
 │   └── WEEK_10/  # DAC (AD7302, 버튼으로 입력값 증감)
 ├── Logic_and_Computer_Design_Fundamentals/  # 교재 "Logic and Computer Design Fundamentals"
 │   ├── ch2/
