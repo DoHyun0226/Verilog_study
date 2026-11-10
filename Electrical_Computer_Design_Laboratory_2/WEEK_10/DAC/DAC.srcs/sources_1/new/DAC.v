@@ -23,21 +23,30 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-// clk       : system clock
-// rst       : active-low reset
-// btn       : [5] SM_1 -1, [4] SM_3 +1, [3] SM_4 -2, [2] SM_6 +2, [1] SM_7 -8, [0] SM_9 +8
-// add_sel   : output select, 0 = VOUTA, 1 = VOUTB
-// dac_csn   : chip select (active low), always 0
-// dac_ldacn : load DAC (active low), always 0 -> DAC register follows input register
-// dac_wrn   : write (active low)
-// dac_a_b   : A/B select pin of AD7302
-// dac_d     : DAC digital input, dac_d[7] = MSB
-// led_out   : current DAC input value (dac_d_temp)
+// AD7302 data path:
+//   dac_d --(CS & WR low)--> input register --(LDAC low)--> DAC register --> VOUTA/VOUTB
+//
+// clk       : system clock, drives the FSM and the cycle counter
+// rst       : active-low reset, returns the FSM to DELAY and clears dac_d_temp
+// btn       : push buttons that change the value to write
+//             [5] SM_1 -1, [4] SM_3 +1, [3] SM_4 -2, [2] SM_6 +2, [1] SM_7 -8, [0] SM_9 +8
+// add_sel   : output channel select switch, 0 = VOUTA, 1 = VOUTB (passed to dac_a_b)
+// dac_csn   : chip select (active low). Data is accepted only while CS and WR are both low.
+//             Only one AD7302 is on the bus, so it is tied to 0 (always selected).
+// dac_ldacn : load DAC (active low). Moves the input register value into the DAC register,
+//             which updates the analog output. Normally used to update A and B at the same time.
+//             Tied to 0 here, so the DAC register is transparent and the output changes
+//             as soon as a write finishes.
+// dac_wrn   : write (active low). The only signal that controls write timing:
+//             low = take dac_d, rising edge = latch dac_d into the input register.
+// dac_a_b   : selects which channel's input register (A or B) receives the write
+// dac_d     : 8-bit digital value sent to the DAC, dac_d[7] = MSB
+// led_out   : shows the current value to write (dac_d_temp) on the LEDs
 module DAC(clk, rst, btn, add_sel, dac_csn, dac_ldacn, dac_wrn, dac_a_b, dac_d, led_out);
 
 input clk, rst;
-input [5:0] btn;
-input add_sel;
+input [5:0] btn; // push button used for increment or decrease of baud rate
+input add_sel; // output pin select(dac output A, B)
 output reg dac_csn, dac_ldacn, dac_wrn, dac_a_b;
 output reg [7:0] dac_d;
 output reg [7:0] led_out;
@@ -52,7 +61,7 @@ parameter DELAY   = 2'b00,  // WR = 1 (rising edge latches dac_d)
           SET_WRN = 2'b01,  // WR = 0
           UP_DATA = 2'b10;  // dac_d <= dac_d_temp
 
-oneshot_universal #(.WIDTH(6)) O1(clk, rst, {btn[5:0]}, {btn_t[5:0]});
+oneshot_universal #(.WIDTH(6)) O1(clk, rst, {btn[5:0]}, {btn_t[5:0]}); // apply one-shot trigger to buttons
 
 // state transition
 always @(posedge clk or negedge rst) begin
@@ -97,7 +106,7 @@ always @(posedge clk or negedge rst) begin
             DELAY :
                 dac_wrn <= 1;
             SET_WRN :
-                dac_wrn <= 0;
+                dac_wrn <= 0; // load enable(negative level sensitive)
             UP_DATA :
                 dac_d <= dac_d_temp;    // dac_wrn stays 0
         endcase
@@ -111,12 +120,12 @@ always @(posedge clk or negedge rst) begin
         led_out <= 8'b0101_0101;
     end
     else begin
-        if(btn_t == 6'b100000)      dac_d_temp <= dac_d_temp - 8'b0000_0001;   // SM_1
-        else if(btn_t == 6'b010000) dac_d_temp <= dac_d_temp + 8'b0000_0001;   // SM_3
-        else if(btn_t == 6'b001000) dac_d_temp <= dac_d_temp - 8'b0000_0010;   // SM_4
-        else if(btn_t == 6'b000100) dac_d_temp <= dac_d_temp + 8'b0000_0010;   // SM_6
-        else if(btn_t == 6'b000010) dac_d_temp <= dac_d_temp - 8'b0000_1000;   // SM_7
-        else if(btn_t == 6'b000001) dac_d_temp <= dac_d_temp + 8'b0000_1000;   // SM_9
+        if(btn_t == 6'b100000)      dac_d_temp <= dac_d_temp - 8'b0000_0001;   // SM_1 ==> -1
+        else if(btn_t == 6'b010000) dac_d_temp <= dac_d_temp + 8'b0000_0001;   // SM_3 ==> +1
+        else if(btn_t == 6'b001000) dac_d_temp <= dac_d_temp - 8'b0000_0010;   // SM_4 ==> -2
+        else if(btn_t == 6'b000100) dac_d_temp <= dac_d_temp + 8'b0000_0010;   // SM_6 ==> +2
+        else if(btn_t == 6'b000010) dac_d_temp <= dac_d_temp - 8'b0000_1000;   // SM_7 ==> -8
+        else if(btn_t == 6'b000001) dac_d_temp <= dac_d_temp + 8'b0000_1000;   // SM_9 ==> +8
         led_out <= dac_d_temp;
     end
 end
