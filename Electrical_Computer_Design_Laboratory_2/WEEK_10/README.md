@@ -5,6 +5,7 @@
 | 프로젝트 | 내용 | 보고서 |
 |---|---|---|
 | [DAC](DAC) | 버튼 6개로 DAC 입력 ±1, ±2, ±8, DIP 스위치로 출력 A/B 선택 (교안 예제) | 예비 보고서 D, 결과 보고서 A, B |
+| [dac_7_segment_text_LCD](dac_7_segment_text_LCD) | + DAC 디지털 입력을 7-segment(10진수)와 Text LCD(10진수·16진수·2진수, 출력 A/B)로 표시 | 예비 보고서 D 추가 기능 |
 
 ## AD7302 제어
 

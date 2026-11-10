@@ -12,7 +12,7 @@
 | [WEEK_7](WEEK_7) | LED PWM 제어(단색 LED 밝기, 3색 LED 색상) |
 | [WEEK_8](WEEK_8) | Text LCD (두 줄 표시, 한 줄 모드, 3칸 shift, 전광판 shift) |
 | [WEEK_9](WEEK_9) | Text LCD 커서 제어 (숫자 쓰기·커서 이동, 줄 전환, 마지막 칸에서 0번 칸으로) |
-| [WEEK_10](WEEK_10) | DAC (AD7302, 버튼으로 입력 ±1, ±2, ±8, 출력 A/B 선택) |
+| [WEEK_10](WEEK_10) | DAC (AD7302, 버튼으로 입력 ±1, ±2, ±8, 출력 A/B 선택, 입력값 7-segment·Text LCD 표시) |
 
 각 프로젝트 폴더의 README에 파일 구성, 입출력, 보드 핀 연결을 정리했습니다.
 
