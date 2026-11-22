@@ -13,6 +13,7 @@
 | [WEEK_8](WEEK_8) | Text LCD (두 줄 표시, 한 줄 모드, 3칸 shift, 전광판 shift) |
 | [WEEK_9](WEEK_9) | Text LCD 커서 제어 (숫자 쓰기·커서 이동, 줄 전환, 마지막 칸에서 0번 칸으로) |
 | [WEEK_10](WEEK_10) | DAC (AD7302, 버튼으로 입력 ±1, ±2, ±8, 출력 A/B 선택, 입력값 7-segment·Text LCD 표시) |
+| [Final_Project](Final_Project) | 사거리 신호등 제어기 (주간·야간 시퀀스, 황색·보행 점멸, Text LCD 시계·상태, 시간 배율, 긴급 차량 수동 조작) |
 
 각 프로젝트 폴더의 README에 파일 구성, 입출력, 보드 핀 연결을 정리했습니다.
 
