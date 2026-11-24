@@ -7,9 +7,9 @@
 //   one for the state shown now ("from") and one for the state that comes
 //   next ("to"), so it can build the yellow and blinking patterns.
 //
-//   The table is the same as ST_A ~ ST_H in main.v, which were checked on
-//   the board on 2026-11-17 with the TEST_LAMP_BTN build. If one changes,
-//   change the other too.
+//   The table is the same as ST_A ~ ST_H in Test_Lamp_Button.v of
+//   WEEK_Fianl_Project/Final_Project_Test_Lamp_Button, which were checked on
+//   the board on 2026-11-17. If one changes, change the other too.
 //
 //   Lights are named by the compass printed on the module board
 //   (North = top of the lab figures). common.xdc maps the names to pins.

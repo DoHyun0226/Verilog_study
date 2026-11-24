@@ -1,4 +1,5 @@
-# common : pin constraints shared by every build (always enabled)
+# common : clock, reset and 24 lamp pins
+#          (same as Final_Project_Test_Lamp_Button common.xdc, keep both the same)
 #
 #   clk   : main clock B6
 #   rst   : DIP switch SW1, active low (SW1 off = 0 -> reset, all lamps off)

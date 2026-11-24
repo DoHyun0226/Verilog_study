@@ -11,33 +11,25 @@
 // Tool Versions: Vivado 2025.2.1
 // Description: top module
 //
-// Dependencies:
-//   TEST_LAMP_BTN : oneshot_trigger.v
-//   TEST_MAIN     : btn_debounce.v, oneshot_trigger.v, time_keeper.v,
-//                   traffic_ctrl.v, lamp_pattern.v, lcd_driver.v
+// Dependencies: btn_debounce.v, oneshot_trigger.v, time_keeper.v,
+//               traffic_ctrl.v, lamp_pattern.v, lcd_driver.v
+//               constraints: common.xdc + test_main.xdc
 //
 // Revision:
 // Revision 0.01 - File Created
 // Revision 0.02 - TEST_MAIN build (day/night sequences, LCD, emergency mode)
+// Revision 0.03 - TEST_LAMP_BTN build moved to its own project
+//                 (WEEK_Fianl_Project/Final_Project_Test_Lamp_Button),
+//                 so the `define build switch is gone
 // Additional Comments:
 //
-//   ===== Builds ===============================================================
-//   Enable exactly ONE `define below, and the matching constraint files:
-//     TEST_LAMP_BTN : board test, SM_1 ~ SM_8 show states A ~ H
-//                     -> common.xdc + test_lamp_btn.xdc
-//     TEST_MAIN     : the project itself
-//                     -> common.xdc + test_main.xdc
-//   (In Vivado: Sources > Constraints > right click > Enable / Disable File.
-//    A constraint file for ports that do not exist only gives a critical warning,
-//    but keep the unused one disabled.)
-//
-//   ===== TEST_MAIN: board controls ============================================
+//   ===== Board controls =======================================================
 //     SW1        : reset, active low (SW1 off -> reset: lamps off, time = 00:00:00)
 //     SW3 SW2    : clock speed-up  00 = x1, 01 = x10, 10 = x100, 11 = x200
 //     SM_1       : +1 hour
 //     SM_2       : emergency vehicle (South -> North)
 //
-//   ===== TEST_MAIN: what it does ==============================================
+//   ===== What it does =========================================================
 //     Day   (08:00 ~ 23:00) : A -> D -> F -> E -> G -> E   5 s each
 //     Night (23:00 ~ 08:00) : B -> A -> C -> A -> E -> H  10 s each
 //     - 1 s yellow between two states (after the 5 / 10 s)
@@ -55,7 +47,7 @@
 //                   lab example is written without the space before ':')
 //                  (day) / (night) follows the clock.
 //
-//   ===== TEST_MAIN: block diagram =============================================
+//   ===== Block diagram ========================================================
 //
 //     btn_hour -> btn_debounce -+-> oneshot -+-> hour_inc -> time_keeper --> hour, min, sec -+
 //     btn_emg  -> btn_debounce -+            |                ^    |                        |
@@ -73,40 +65,17 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
- // User Define
-//`define TEST_LAMP_BTN
-`define TEST_MAIN
- // User Define end
-
-
-
 module main(
     input clk,
     input rst,
-    `ifdef TEST_LAMP_BTN
-        // btn[0]: button 1
-        // btn[1]: button 2
-        // btn[2]: button 3
-        // btn[3]: button 4
-        // btn[4]: button 5
-        // btn[5]: button 6
-        // btn[6]: button 7
-        // btn[7]: button 8
-        input [7:0] btn,
-    `elsif TEST_MAIN
-        input [1:0] scale_sel,          // SW3 SW2: 0 = x1, 1 = x10, 2 = x100, 3 = x200
-        input btn_hour,                 // SM_1: +1 hour
-        input btn_emg,                  // SM_2: emergency vehicle
-        output LCD_E,                   // text LCD enable
-        output LCD_RS,                  // text LCD register select
-        output LCD_RW,                  // text LCD read / write
-        output [7:0] LCD_DATA,          // text LCD DB[7:0]
-    `endif
-    `ifdef TEST_LAMP_BTN
-        output reg [23:0] state         // keep last: no trailing comma in any build
-    `else
-        output [23:0] state             // driven by traffic_ctrl
-    `endif
+    input [1:0] scale_sel,          // SW3 SW2: 0 = x1, 1 = x10, 2 = x100, 3 = x200
+    input btn_hour,                 // SM_1: +1 hour
+    input btn_emg,                  // SM_2: emergency vehicle
+    output LCD_E,                   // text LCD enable
+    output LCD_RS,                  // text LCD register select
+    output LCD_RW,                  // text LCD read / write
+    output [7:0] LCD_DATA,          // text LCD DB[7:0]
+    output [23:0] state             // 24 lamps, driven by traffic_ctrl
 );
     // ------------------------------------------------------------------
     // Settings (the testbench overrides them: main #(.CLK_HZ(1000), ...))
@@ -114,12 +83,13 @@ module main(
     //   #( ) list, Verilog turns every parameter below into a localparam.
     // ------------------------------------------------------------------
     parameter CLK_HZ    = 50_000_000;   // B6 clock frequency [Hz]
-    parameter INIT_HOUR = 0;            // clock value after reset (TEST_MAIN)
+    parameter INIT_HOUR = 0;            // clock value after reset
     parameter INIT_MIN  = 0;
     parameter INIT_SEC  = 0;
 
     // ------------------------------------------------------------------
-    // Lamp patterns
+    // Lamp output state[23:0]
+    //   The patterns of states A ~ H are in lamp_pattern.v (used by traffic_ctrl).
     //   Lights are named by the compass printed on the module board
     //   (same as the state figures of the lab: North = top of the figure).
     //   The pin-table direction names differ; common.xdc does the remapping.
@@ -133,68 +103,6 @@ module main(
     //     [ 7: 6] East  walk      [ 5: 4] West  walk
     //     [ 3: 2] South walk      [ 1: 0] North walk
     // ------------------------------------------------------------------
-    parameter  [3:0] V_R  = 4'b1000,    // red
-                     V_Y  = 4'b0100,    // yellow
-                     V_G  = 4'b0010,    // green
-                     V_L  = 4'b0001,    // left arrow only
-                     V_GL = 4'b0011;    // green + left arrow
-
-    parameter  [1:0] P_R  = 2'b10,      // walk red
-                     P_G  = 2'b01;      // walk green
-
-    //                         E_veh W_veh S_veh N_veh  E_wk W_wk S_wk N_wk
-    parameter  [23:0] ST_A = { V_R,  V_R,  V_G,  V_G,   P_G, P_G, P_R, P_R };
-    parameter  [23:0] ST_B = { V_R,  V_R,  V_R,  V_GL,  P_G, P_R, P_R, P_R };
-    parameter  [23:0] ST_C = { V_R,  V_R,  V_GL, V_R,   P_R, P_G, P_R, P_R };
-    parameter  [23:0] ST_D = { V_R,  V_R,  V_L,  V_L,   P_R, P_R, P_R, P_R };
-    parameter  [23:0] ST_E = { V_G,  V_G,  V_R,  V_R,   P_R, P_R, P_G, P_G };
-    parameter  [23:0] ST_F = { V_R,  V_GL, V_R,  V_R,   P_R, P_R, P_R, P_G };
-    parameter  [23:0] ST_G = { V_GL, V_R,  V_R,  V_R,   P_R, P_R, P_G, P_R };
-    parameter  [23:0] ST_H = { V_L,  V_L,  V_R,  V_R,   P_R, P_R, P_R, P_R };
-    parameter  [23:0] ST_default = 0;
-    
-    
-    
-    
-    
-    
-`ifdef TEST_LAMP_BTN 
-    parameter [7:0] btn_1 = 8'b00000001;
-    parameter [7:0] btn_2 = 8'b00000010;
-    parameter [7:0] btn_3 = 8'b00000100;
-    parameter [7:0] btn_4 = 8'b00001000;
-    parameter [7:0] btn_5 = 8'b00010000;
-    parameter [7:0] btn_6 = 8'b00100000;
-    parameter [7:0] btn_7 = 8'b01000000;
-    parameter [7:0] btn_8 = 8'b10000000;
-    
-    wire [7:0] btn_trig;
-    oneshot_universal #(.WIDTH(8)) O_TEST_LAMP_BTN(.clk(clk), .rst(rst), .btn(btn), .btn_trig(btn_trig));
-    always @(posedge clk, negedge rst)
-    begin
-        if(!rst)
-            state <= ST_default;
-        else
-        begin
-            case (btn_trig)
-                btn_1: state <= ST_A;
-                btn_2: state <= ST_B;
-                btn_3: state <= ST_C;
-                btn_4: state <= ST_D;
-                btn_5: state <= ST_E;
-                btn_6: state <= ST_F;
-                btn_7: state <= ST_G;
-                btn_8: state <= ST_H;
-                default: state <= state;    // no press or multiple presses: hold
-            endcase
-        end
-    end    
-`elsif TEST_MAIN
-    // ==================================================================
-    // TEST_MAIN : traffic light controller
-    //   (ST_A ~ ST_H above are not used here; traffic_ctrl gets the same
-    //    table from lamp_pattern.v)
-    // ==================================================================
 
     // ---- DIP switches: 2-FF synchronizer -----------------------------
     // The switches are not related to clk. Two flip-flops make sure that
@@ -268,7 +176,6 @@ module main(
     lcd_driver #(.CLK_HZ(CLK_HZ))
         LCD(.clk(clk), .rst(rst), .line1(line1), .line2(line2),
             .LCD_E(LCD_E), .LCD_RS(LCD_RS), .LCD_RW(LCD_RW), .LCD_DATA(LCD_DATA));
-`endif
 endmodule
 
 

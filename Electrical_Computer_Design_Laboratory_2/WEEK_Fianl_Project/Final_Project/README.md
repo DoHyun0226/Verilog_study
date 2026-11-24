@@ -8,32 +8,24 @@
 
 | 파일 | 내용 |
 |---|---|
-| `main.v` | 최상위 모듈. `` `define ``으로 빌드 선택 (TEST_LAMP_BTN / TEST_MAIN) |
+| `main.v` | 최상위 모듈 |
 | `traffic_ctrl.v` | 신호 상태 머신: 주간·야간 시퀀스, 황색, 보행 점멸, 긴급 모드 |
 | `lamp_pattern.v` | 스테이트 글자(A ~ H) → 램프 24개 패턴 표 |
 | `time_keeper.v` | 신호등 시계 hh:mm:ss, 배율 x1 / x10 / x100 / x200, +1시간, 주간/야간 판정 |
 | `lcd_driver.v` | 50 MHz에서 Text LCD 두 줄(16글자씩) 쓰기 |
 | `btn_debounce.v` | 버튼 채터링 제거 (10 ms) |
 | `oneshot_trigger.v` | `oneshot_universal`: 버튼을 누를 때 1클럭 펄스 |
-| `common.xdc` | 클럭, 리셋, 램프 24개 핀 (두 빌드 공통) |
-| `test_main.xdc` | TEST_MAIN 빌드: 배율 스위치, 버튼 2개, Text LCD 핀 |
-| `test_lamp_btn.xdc` | TEST_LAMP_BTN 빌드: 버튼 SM_1 ~ SM_8 핀 |
-| `tb_main.v` | TEST_MAIN 테스트벤치 (sim_1 top) |
+| `common.xdc` | 클럭, 리셋, 램프 24개 핀 (램프 테스트 프로젝트의 `common.xdc`와 같은 파일) |
+| `test_main.xdc` | 배율 스위치, 버튼 2개, Text LCD 핀 |
+| `tb_main.v` | 테스트벤치 (sim_1 top) |
 
 (소스는 `Final_Project.srcs/sources_1/new`, 제약은 `constrs_1/new`, 테스트벤치는 `sim_1/new`에 있고 모두 프로젝트에 추가되어 있습니다. top = `main`)
 
-## 빌드 선택
+## 램프 테스트 (별도 프로젝트)
 
-`main.v` 위쪽의 `` `define `` 하나만 켜고, 짝이 맞는 제약 파일만 Enable 합니다. 지금은 **TEST_MAIN**이 켜져 있고 `test_lamp_btn.xdc`는 Disable 되어 있습니다.
+SM_1 ~ SM_8로 스테이트 A ~ H 램프를 확인하던 TEST_LAMP_BTN 빌드는 [Final_Project_Test_Lamp_Button](../Final_Project_Test_Lamp_Button) 프로젝트로 옮겼습니다. 그래서 이 프로젝트에는 `` `define `` 빌드 선택이 없고, 제약 파일은 `common.xdc` + `test_main.xdc` 두 개 모두 사용합니다.
 
-| 빌드 | 용도 | 제약 파일 |
-|---|---|---|
-| `TEST_MAIN` | 프로젝트 본 기능 | `common.xdc` + `test_main.xdc` |
-| `TEST_LAMP_BTN` | 램프 확인용. SM_1 ~ SM_8을 누르면 스테이트 A ~ H 표시 | `common.xdc` + `test_lamp_btn.xdc` |
-
-Vivado에서 Sources → Constraints → 파일 우클릭 → Enable File / Disable File로 바꿉니다.
-
-## 보드 조작 (TEST_MAIN)
+## 보드 조작
 
 | 입력 | 보드 | 기능 |
 |---|---|---|
@@ -70,7 +62,7 @@ Vivado에서 Sources → Constraints → 파일 우클릭 → Enable File / Disa
 - 교안 핀 표의 방향 이름은 기판과 다릅니다: `N_*` → West, `E_*` → North, `S_*` → South, `W_*` → East.
 - GREEN 칸은 교안의 `*_LEFT` 핀, LEFT 칸은 교안의 `*_GREEN` 핀입니다 (기판에서 서로 바뀌어 있음).
 
-### TEST_MAIN (`test_main.xdc`)
+### 스위치, 버튼, Text LCD (`test_main.xdc`)
 
 | 포트 | FPGA 핀 | 보드 | 기능 |
 |---|---|---|---|
@@ -90,18 +82,7 @@ Vivado에서 Sources → Constraints → 파일 우클릭 → Enable File / Disa
 | `LCD_DATA[6]` | C1 | LCD_D6 | |
 | `LCD_DATA[7]` | D1 | LCD_D7 | |
 
-### TEST_LAMP_BTN (`test_lamp_btn.xdc`)
-
-| 포트 | FPGA 핀 | 보드 | 기능 |
-|---|---|---|---|
-| `btn[0]` | K4 | SM_1 | 스테이트 A |
-| `btn[1]` | N8 | SM_2 | 스테이트 B |
-| `btn[2]` | N4 | SM_3 | 스테이트 C |
-| `btn[3]` | N1 | SM_4 | 스테이트 D |
-| `btn[4]` | P6 | SM_5 | 스테이트 E |
-| `btn[5]` | N6 | SM_6 | 스테이트 F |
-| `btn[6]` | L5 | SM_7 | 스테이트 G |
-| `btn[7]` | J2 | SM_8 | 스테이트 H |
+램프 테스트용 버튼 SM_1 ~ SM_8 핀은 [Final_Project_Test_Lamp_Button README](../Final_Project_Test_Lamp_Button/README.md)에 있습니다.
 
 ## 동작
 
@@ -240,7 +221,7 @@ Vivado에서 Run Simulation → Run Behavioral Simulation을 누르면 `$finish`
 
 - 야간 A(idx 1)가 도는 중 08:00이 되면 다음이 주간 A가 되므로, 점멸하던 East walk가 다시 초록으로 켜지고 A가 황색(바뀌는 램프 없음) 뒤 주간 A로 이어집니다. 다음 스테이트를 매 순간 시계로 정하기 때문입니다.
 
-## 빌드 결과 (2026-11-23, TEST_MAIN)
+## 빌드 결과 (2026-11-23, 램프 테스트를 옮기기 전)
 
 | 항목 | 결과 |
 |---|---|

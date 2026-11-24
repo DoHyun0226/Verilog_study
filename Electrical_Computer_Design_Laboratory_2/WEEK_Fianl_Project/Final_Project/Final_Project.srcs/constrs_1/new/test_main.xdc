@@ -1,5 +1,5 @@
-# test_main : pin constraints for the TEST_MAIN build only
-#             (enable together with common.xdc, disable test_lamp_btn.xdc)
+# test_main : switch, button and text LCD pins of the traffic light controller
+#             (used together with common.xdc)
 #
 #   scale_sel : DIP switches SW3 SW2, clock speed-up of the traffic light time
 #                 SW3 SW2 = off off -> x1, off on -> x10, on off -> x100, on on -> x200

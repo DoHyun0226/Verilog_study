@@ -1,5 +1,5 @@
-# test_lamp_btn : pin constraints for the TEST_LAMP_BTN build only
-#                 (enable together with common.xdc, disable for other builds)
+# test_lamp_btn : button pins of Final_Project_Test_Lamp_Button (lamp test)
+#                 (used together with common.xdc)
 #
 #   btn : buttons SM_1 ~ SM_8, btn[0] = SM_1 -> state A ... btn[7] = SM_8 -> state H
 
