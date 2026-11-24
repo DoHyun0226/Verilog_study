@@ -8,7 +8,7 @@
 |---|---|
 | `Test_Lamp_Button.v` | 최상위 모듈. 스테이트 A ~ H 램프 패턴 표 `ST_A` ~ `ST_H`, 버튼 → 패턴 |
 | `oneshot_trigger.v` | `oneshot_universal`: 버튼을 누를 때 1클럭 펄스 (Final_Project와 같은 파일) |
-| `common.xdc` | 클럭, 리셋, 램프 24개 핀 (Final_Project `common.xdc`와 같은 파일) |
+| `common.xdc` | 클럭, 리셋, 램프 24개 핀, `create_clock` 50 MHz (Final_Project `common.xdc`와 같은 파일) |
 | `test_lamp_btn.xdc` | 버튼 SM_1 ~ SM_8 핀 |
 
 (소스는 `Final_Project_Test_Lamp_Button.srcs/sources_1/new`, 제약은 `constrs_1/new`에 있고 모두 프로젝트에 추가되어 있습니다. top = `Test_Lamp_Button`)

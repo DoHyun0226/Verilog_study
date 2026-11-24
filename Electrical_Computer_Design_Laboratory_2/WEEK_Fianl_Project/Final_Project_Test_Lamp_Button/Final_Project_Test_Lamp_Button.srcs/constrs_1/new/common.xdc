@@ -1,7 +1,7 @@
 # common : clock, reset and 24 lamp pins
 #          (same as Final_Project common.xdc, keep both the same)
 #
-#   clk   : main clock B6
+#   clk   : main clock B6, 50 MHz (create_clock at the end)
 #   rst   : DIP switch SW1, active low (SW1 off = 0 -> reset, all lamps off)
 #   state : 24 lamps of the traffic lights module
 #             [23:20] East  vehicle {RED, YELLOW, GREEN, LEFT}
@@ -56,3 +56,8 @@ set_property PACKAGE_PIN G11 [get_ports {state[0]}]     ;# North walk GREEN (pin
 set_property IOSTANDARD LVCMOS33 [get_ports clk]
 set_property IOSTANDARD LVCMOS33 [get_ports rst]
 set_property IOSTANDARD LVCMOS33 [get_ports {state[*]}]
+
+# clock : B6 runs at the board default 50 MHz (period 20 ns).
+#         Vivado places and routes for this period and checks the timing
+#         (WNS / WHS in the timing summary).
+create_clock -period 20.000 -name clk [get_ports clk]

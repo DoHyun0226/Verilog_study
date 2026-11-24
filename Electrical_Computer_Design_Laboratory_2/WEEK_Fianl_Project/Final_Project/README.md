@@ -15,7 +15,7 @@
 | `lcd_driver.v` | 50 MHz에서 Text LCD 두 줄(16글자씩) 쓰기 |
 | `btn_debounce.v` | 버튼 채터링 제거 (10 ms) |
 | `oneshot_trigger.v` | `oneshot_universal`: 버튼을 누를 때 1클럭 펄스 |
-| `common.xdc` | 클럭, 리셋, 램프 24개 핀 (램프 테스트 프로젝트의 `common.xdc`와 같은 파일) |
+| `common.xdc` | 클럭, 리셋, 램프 24개 핀, `create_clock` 50 MHz (램프 테스트 프로젝트의 `common.xdc`와 같은 파일) |
 | `test_main.xdc` | 배율 스위치, 버튼 2개, Text LCD 핀 |
 | `tb_main.v` | 테스트벤치 (sim_1 top) |
 
@@ -45,7 +45,7 @@ SM_1 ~ SM_8로 스테이트 A ~ H 램프를 확인하던 TEST_LAMP_BTN 빌드는
 
 | 포트 | FPGA 핀 | 보드 | 비고 |
 |---|---|---|---|
-| `clk` | B6 | Main_clock1 | 50 MHz |
+| `clk` | B6 | Main_clock1 | 50 MHz, `create_clock -period 20.000` |
 | `rst` | Y1 | DIP SW1 | active low (OFF = 리셋) |
 
 ### 신호등 램프 24개 (`common.xdc`)
@@ -231,4 +231,5 @@ Vivado에서 Run Simulation → Run Behavioral Simulation을 누르면 `$finish`
 | 50 MHz 타이밍 | WNS +10.281 ns, WHS +0.029 ns, 실패 경로 0 |
 | 비트스트림 | `Final_Project.runs/impl_1/main.bit` |
 
-- 제약 파일에는 이전 실습처럼 `create_clock`이 없어서 "no user specified timing constraints" 경고와 TIMING-17 methodology 경고가 나옵니다. 위 타이밍은 배치 모드에서 routed checkpoint에만 임시로 20 ns 클럭을 걸어 확인한 값이고, xdc 파일은 바꾸지 않았습니다.
+- 이 빌드 때는 제약 파일에 `create_clock`이 없어서 "no user specified timing constraints" 경고와 TIMING-17 methodology 경고가 나왔습니다. 위 타이밍은 배치 모드에서 routed checkpoint에만 임시로 20 ns 클럭을 걸어 확인한 값입니다.
+- 2026-11-24에 `common.xdc`에 `create_clock -period 20.000 -name clk [get_ports clk]`를 넣었습니다. 다음 빌드부터는 이 경고가 없어지고, Vivado가 50 MHz 기준으로 배치·배선한 뒤 타이밍 요약에 WNS / WHS를 직접 보여 줍니다.
