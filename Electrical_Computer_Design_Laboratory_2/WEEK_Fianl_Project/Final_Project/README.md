@@ -45,6 +45,64 @@ Vivado에서 Sources → Constraints → 파일 우클릭 → Enable File / Disa
 
 램프 방향은 **모듈 기판에 인쇄된 나침반 기준**(교안 그림과 같은 방향, 북 = 위)입니다. 교안 핀 표의 방향 이름과 GREEN/LEFT는 실제 기판과 달라서 `common.xdc`에서 바로잡았습니다 (2026-11-17 보드에서 A ~ H 확인).
 
+## 핀 맵
+
+모든 핀은 `IOSTANDARD LVCMOS33`입니다.
+
+### 공통 (`common.xdc`)
+
+| 포트 | FPGA 핀 | 보드 | 비고 |
+|---|---|---|---|
+| `clk` | B6 | Main_clock1 | 50 MHz |
+| `rst` | Y1 | DIP SW1 | active low (OFF = 리셋) |
+
+### 신호등 램프 24개 (`common.xdc`)
+
+칸 = FPGA 핀 `[state 비트]`. 방향은 기판 나침반 기준입니다.
+
+| 방향 (기판) | 교안 핀 표 이름 | RED | YELLOW | GREEN | LEFT | 보행 RED | 보행 GREEN |
+|---|---|---|---|---|---|---|---|
+| East | `W_*` | C17 `[23]` | C18 `[22]` | C19 `[21]` | A20 `[20]` | E18 `[7]` | A16 `[6]` |
+| West | `N_*` | G14 `[19]` | A14 `[18]` | D15 `[17]` | C16 `[16]` | G13 `[5]` | F12 `[4]` |
+| South | `S_*` | B13 `[15]` | L18 `[14]` | F15 `[13]` | E16 `[12]` | A19 `[3]` | E19 `[2]` |
+| North | `E_*` | C12 `[11]` | D13 `[10]` | F10 `[9]` | E11 `[8]` | C11 `[1]` | G11 `[0]` |
+
+- 교안 핀 표의 방향 이름은 기판과 다릅니다: `N_*` → West, `E_*` → North, `S_*` → South, `W_*` → East.
+- GREEN 칸은 교안의 `*_LEFT` 핀, LEFT 칸은 교안의 `*_GREEN` 핀입니다 (기판에서 서로 바뀌어 있음).
+
+### TEST_MAIN (`test_main.xdc`)
+
+| 포트 | FPGA 핀 | 보드 | 기능 |
+|---|---|---|---|
+| `scale_sel[0]` | W3 | DIP SW2 | 시계 배율 아래 비트 |
+| `scale_sel[1]` | U2 | DIP SW3 | 시계 배율 위 비트 |
+| `btn_hour` | K4 | SM_1 | +1시간 |
+| `btn_emg` | N8 | SM_2 | 긴급 차량 |
+| `LCD_E` | A6 | LCD_E | Text LCD enable |
+| `LCD_RS` | G6 | LCD_RS | 0 = 명령, 1 = 데이터 |
+| `LCD_RW` | D6 | LCD_RW | 0 = 쓰기 |
+| `LCD_DATA[0]` | A4 | LCD_D0 | |
+| `LCD_DATA[1]` | B2 | LCD_D1 | |
+| `LCD_DATA[2]` | C3 | LCD_D2 | |
+| `LCD_DATA[3]` | D4 | LCD_D3 | |
+| `LCD_DATA[4]` | A2 | LCD_D4 | |
+| `LCD_DATA[5]` | C5 | LCD_D5 | |
+| `LCD_DATA[6]` | C1 | LCD_D6 | |
+| `LCD_DATA[7]` | D1 | LCD_D7 | |
+
+### TEST_LAMP_BTN (`test_lamp_btn.xdc`)
+
+| 포트 | FPGA 핀 | 보드 | 기능 |
+|---|---|---|---|
+| `btn[0]` | K4 | SM_1 | 스테이트 A |
+| `btn[1]` | N8 | SM_2 | 스테이트 B |
+| `btn[2]` | N4 | SM_3 | 스테이트 C |
+| `btn[3]` | N1 | SM_4 | 스테이트 D |
+| `btn[4]` | P6 | SM_5 | 스테이트 E |
+| `btn[5]` | N6 | SM_6 | 스테이트 F |
+| `btn[6]` | L5 | SM_7 | 스테이트 G |
+| `btn[7]` | J2 | SM_8 | 스테이트 H |
+
 ## 동작
 
 ### 시퀀스
